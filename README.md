@@ -22,7 +22,7 @@
 `D:\WonderfulOS\src>make run #自动编译+运行（必须先执行完整编译）`<br/>
 其他指令详见Makefile
 
-3. [开发工具包](https://gitee.com/kkstudio2019/Wonderful/releases/v1.0)，选我最方便！
+3. [开发工具包](https://gitee.com/kkstudio2019/wonderful/releases/v1.0)，选我最方便！
 
 #### 参与贡献
 
