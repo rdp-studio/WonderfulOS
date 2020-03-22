@@ -34,7 +34,7 @@ void HariMain(void)
 	api_putchar('e');
 	api_putchar('r');
 	api_putchar('d');
-	api_putchar('');
+	api_putchar(' ');
 	api_putchar('B');
 	api_putchar('y');
 	api_putchar(' ');
