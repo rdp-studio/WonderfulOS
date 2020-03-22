@@ -12,7 +12,7 @@
 
 1. 开发教程<br/><br/>
 环境准备：<br/>
-先下载源码，放在一个文件夹里，如`D:\WonderfulOS\src`中，然后在上级目录`D:\WonderfulOS`中运行[开发工具包](https://gitee.com/kkstudio2019/Wonderful/releases/v1.0)自动解压器，即可完成环境准备<br/><br/>
+先下载源码，放在一个文件夹里，如`D:\WonderfulOS\src`中，然后在上级目录`D:\WonderfulOS`中运行[开发工具包](https://gitee.com/kkstudio2019/wonderful/releases/v1.0)自动解压器，即可完成环境准备<br/><br/>
 正式开始：<br/>
 先执行make full完成编译部分，之后make run即可虚拟机启动。程序可以参考各个目录中的c程序（注意！程序不要忘了单独make！）。如需添加hrb程序，在makefile里的haribote.img节点里添加copy指令复制hrb程序即可。
 
