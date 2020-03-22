@@ -24,7 +24,7 @@
 `D:\WonderfulOS\src>make run_os #完整编译+运行`<br/>
 其他指令详见Makefile
 
-3. [开发工具包](https://gitee.com/kkstudio2019/WonderfulOS/releases/v1.0)，选我最方便！
+3. [开发工具包](https://gitee.com/kkstudio2019/Wonderful/releases/v1.0)，选我最方便！
 
 #### 参与贡献
 
