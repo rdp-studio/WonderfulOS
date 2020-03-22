@@ -1,6 +1,7 @@
 # Wonderful操作系统
 
 #### 介绍
+![](https://gitee.com/kkstudio2019/wonderful/raw/master/yulan.png)  
 一款由RDPStudio开发的操作系统（我们拥有完整版权）。
 
 #### 软件架构
