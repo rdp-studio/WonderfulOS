@@ -5,7 +5,7 @@ struct BOOTINFO { /* 0x0ff0-0x0fff */
 	char vmode; /* ビデオモード  何ビットカラーか */
 	char reserve;
 	short scrnx, scrny; /* 画面解像度 */
-	char *vram;
+	int *vram;
 };
 #define ADR_BOOTINFO	0x00000ff0
 #define ADR_DISKIMG		0x00100000
@@ -50,29 +50,29 @@ int fifo32_status(struct FIFO32 *fifo);
 /* graphic.c */
 void init_palette(void);
 void set_palette(int start, int end, unsigned char *rgb);
-void boxfill8(unsigned char *vram, int xsize, unsigned char c, int x0, int y0, int x1, int y1);
-void init_screen8(char *vram, int x, int y);
-void putfont8(char *vram, int xsize, int x, int y, char c, char *font);
-void putfonts8_asc(char *vram, int xsize, int x, int y, char c, unsigned char *s);
-void init_mouse_cursor8(char *mouse, char bc);
-void putblock8_8(char *vram, int vxsize, int pxsize,
-	int pysize, int px0, int py0, char *buf, int bxsize);
-#define COL8_000000		0
-#define COL8_FF0000		1
-#define COL8_00FF00		2
-#define COL8_FFFF00		3
-#define COL8_0000FF		4
-#define COL8_FF00FF		5
-#define COL8_00FFFF		6
-#define COL8_FFFFFF		7
-#define COL8_C6C6C6		8
-#define COL8_840000		9
-#define COL8_008400		10
-#define COL8_848400		11
-#define COL8_000084		12
-#define COL8_840084		13
-#define COL8_008484		14
-#define COL8_848484		15
+void boxfill8(unsigned int *vram, int xsize, unsigned int c, int x0, int y0, int x1, int y1);
+void init_screen8(int *vram, int x, int y);
+void putfont8(int *vram, int xsize, int x, int y, int c, char *font);
+void putfonts8_asc(int *vram, int xsize, int x, int y, int c, unsigned char *s);
+void init_mouse_cursor8(int *mouse, int bc);
+void putblock8_8(int *vram, int vxsize, int pxsize,
+	int pysize, int px0, int py0, int *buf, int bxsize);
+#define COL8_000000		0x00000000
+#define COL8_FF0000		0x00ff0000
+#define COL8_00FF00		0x0000ff00
+#define COL8_FFFF00		0x00ffff00
+#define COL8_0000FF		0x000000ff
+#define COL8_FF00FF		0x00ff00ff
+#define COL8_00FFFF		0x0000ffff
+#define COL8_FFFFFF		0x00ffffff
+#define COL8_C6C6C6		0x00c6c6c6
+#define COL8_840000		0x00840000
+#define COL8_008400		0x00008400
+#define COL8_848400		0x00848400
+#define COL8_000084		0x00000084
+#define COL8_840084		0x00840084
+#define COL8_008484		0x00008484
+#define COL8_848484		0x00848484
 
 /* dsctbl.c */
 struct SEGMENT_DESCRIPTOR {
@@ -152,20 +152,20 @@ int memman_free_4k(struct MEMMAN *man, unsigned int addr, unsigned int size);
 /* sheet.c */
 #define MAX_SHEETS		256
 struct SHEET {
-	unsigned char *buf;
+	unsigned int *buf;
 	int bxsize, bysize, vx0, vy0, col_inv, height, flags;
 	struct SHTCTL *ctl;
 	struct TASK *task;
 };
 struct SHTCTL {
-	unsigned char *vram, *map;
+	unsigned int *vram, *map;
 	int xsize, ysize, top;
 	struct SHEET *sheets[MAX_SHEETS];
 	struct SHEET sheets0[MAX_SHEETS];
 };
-struct SHTCTL *shtctl_init(struct MEMMAN *memman, unsigned char *vram, int xsize, int ysize);
+struct SHTCTL *shtctl_init(struct MEMMAN *memman, unsigned int *vram, int xsize, int ysize);
 struct SHEET *sheet_alloc(struct SHTCTL *ctl);
-void sheet_setbuf(struct SHEET *sht, unsigned char *buf, int xsize, int ysize, int col_inv);
+void sheet_setbuf(struct SHEET *sht, unsigned int *buf, int xsize, int ysize, int col_inv);
 void sheet_updown(struct SHEET *sht, int height);
 void sheet_refresh(struct SHEET *sht, int bx0, int by0, int bx1, int by1);
 void sheet_slide(struct SHEET *sht, int vx0, int vy0);
@@ -240,10 +240,10 @@ void task_switch(void);
 void task_sleep(struct TASK *task);
 
 /* window.c */
-void make_window8(unsigned char *buf, int xsize, int ysize, char *title, char act);
+void make_window8(unsigned int *buf, int xsize, int ysize, char *title, char act);
 void putfonts8_asc_sht(struct SHEET *sht, int x, int y, int c, int b, char *s, int l);
 void make_textbox8(struct SHEET *sht, int x0, int y0, int sx, int sy, int c);
-void make_wtitle8(unsigned char *buf, int xsize, char *title, char act);
+void make_wtitle8(unsigned int *buf, int xsize, char *title, char act);
 void change_wtitle8(struct SHEET *sht, char act);
 
 /* console.c */
@@ -295,3 +295,44 @@ int tek_decomp(unsigned char *p, char *q, int size);
 /* bootpack.c */
 struct TASK *open_constask(struct SHEET *sht, unsigned int memtotal);
 struct SHEET *open_console(struct SHTCTL *shtctl, unsigned int memtotal);
+
+/*ｱﾚﾖｽ*/
+struct DLL_STRPICENV {	/* 64KB */
+	int work[64 * 1024 / 4];
+};
+
+struct RGB {
+	unsigned char b, g, r, t;
+};
+
+/* jpeg.c */
+int info_JPEG(struct DLL_STRPICENV *env, int *info, int size, char *fp);
+int decode0_JPEG(struct DLL_STRPICENV *env, int size, char *fp, int b_type, char *buf, int skip); 
+
+/*cmos.c*/
+#define cmos_index 0x70
+#define cmos_data 0x71
+#define CMOS_CUR_SEC	0x0
+#define CMOS_ALA_SEC	0x1
+#define CMOS_CUR_MIN	0x2
+#define CMOS_ALA_MIN	0x3
+#define CMOS_CUR_HOUR	0x4
+#define CMOS_ALA_HOUR	0x5
+#define CMOS_WEEK_DAY	0x6
+#define CMOS_MON_DAY	0x7
+#define CMOS_CUR_MON	0x8
+#define CMOS_CUR_YEAR	0x9
+#define CMOS_DEV_TYPE	0x12
+#define CMOS_CUR_CEN	0x32
+#define BCD_HEX(n)	((n >> 4) * 10) + (n & 0xf)
+
+#define BCD_ASCII_first(n)	(((n<<4)>>4)+0x30)
+#define BCD_ASCII_S(n)	((n<<4)+0x30)
+
+unsigned int get_hour_hex();
+unsigned int get_min_hex();
+unsigned int get_sec_hex();
+unsigned int get_day_of_month();
+unsigned int get_day_of_week();
+unsigned int get_mon_hex();
+unsigned int get_year();

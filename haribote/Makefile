@@ -1,6 +1,6 @@
 OBJS_BOOTPACK = bootpack.obj naskfunc.obj hankaku.obj graphic.obj dsctbl.obj \
 		int.obj fifo.obj keyboard.obj mouse.obj memory.obj sheet.obj timer.obj \
-		mtask.obj window.obj console.obj file.obj tek.obj
+		mtask.obj window.obj console.obj file.obj tek.obj jpeg.obj cmos.obj
 
 TOOLPATH = ../../z_tools/
 INCPATH  = ../../z_tools/haribote/
@@ -23,13 +23,13 @@ DEL      = del
 # デフォルト動作
 
 default :
-	$(MAKE) ipl09.bin
+	$(MAKE) ipl50.bin
 	$(MAKE) haribote.sys
 
 # ファイル生成規則
 
-ipl09.bin : ipl09.nas Makefile
-	$(NASK) ipl09.nas ipl09.bin ipl09.lst
+ipl50.bin : ipl50.nas Makefile
+	$(NASK) ipl50.nas ipl50.bin ipl50.lst
 
 asmhead.bin : asmhead.nas Makefile
 	$(NASK) asmhead.nas asmhead.bin asmhead.lst
@@ -75,5 +75,5 @@ clean :
 
 src_only :
 	$(MAKE) clean
-	-$(DEL) ipl09.bin
+	-$(DEL) ipl50.bin
 	-$(DEL) haribote.sys

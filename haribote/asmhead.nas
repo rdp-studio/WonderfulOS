@@ -3,7 +3,7 @@
 
 [INSTRSET "i486p"]
 
-VBEMODE	EQU		0x105			; 1024 x  768 x 8bitカラー
+VBEMODE EQU 	0x0115			; 1024 x  768 x 8bitカラー
 ; （画面モード一覧）
 ;	0x100 :  640 x  400 x 8bitカラー
 ;	0x101 :  640 x  480 x 8bitカラー
@@ -46,21 +46,22 @@ VRAM	EQU		0x0ff8			; グラフィックバッファの開始番地
 		MOV		CX,VBEMODE
 		MOV		AX,0x4f01
 		INT		0x10
-		CMP		AX,0x004f
-		JNE		scrn320
+;
+;		CMP		AX,0x004f
+;		JNE		scrn320
 
 ; 画面モード情報の確認
 
-		CMP		BYTE [ES:DI+0x19],8
-		JNE		scrn320
-		CMP		BYTE [ES:DI+0x1b],4
-		JNE		scrn320
-		MOV		AX,[ES:DI+0x00]
-		AND		AX,0x0080
-		JZ		scrn320			; モード属性のbit7が0だったのであきらめる
+;		CMP		BYTE [ES:DI+0x19],8
+;		JNE		scrn320
+;		CMP		BYTE [ES:DI+0x1b],4
+;		JNE		scrn320
+;		MOV		AX,[ES:DI+0x00]
+;		AND		AX,0x0080
+;		JZ		scrn320			; モード属性のbit7が0だったのであきらめる
 
 ; 画面モードの切り替え
-
+;
 		MOV		BX,VBEMODE+0x4000
 		MOV		AX,0x4f02
 		INT		0x10

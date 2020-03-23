@@ -3,6 +3,7 @@
 #include "bootpack.h"
 #include <stdio.h>
 #include <string.h>
+#include "../stdlib.h"
 
 void console_task(struct SHEET *sheet, int memtotal)
 {
@@ -38,6 +39,7 @@ void console_task(struct SHEET *sheet, int memtotal)
 		task->langmode = 0;
 	}
 	task->langbyte1 = 0;
+	task->langmode=2;
 
 	/* 僾儘儞僾僩昞帵 */
 	cons_putchar(&cons, '>', 1);
@@ -123,31 +125,29 @@ void cons_putchar(struct CONSOLE *cons, int chr, char move)
 	char s[2];
 	s[0] = chr;
 	s[1] = 0;
-	if (s[0] == 0x09) {	/* 僞僽 */
+	if (s[0] == 0x09) {
 		for (;;) {
 			if (cons->sht != 0) {
 				putfonts8_asc_sht(cons->sht, cons->cur_x, cons->cur_y, COL8_FFFFFF, COL8_000000, " ", 1);
 			}
 			cons->cur_x += 8;
-			if (cons->cur_x == 8 + 240) {
+			if (cons->cur_x == 8 + 512) {
 				cons_newline(cons);
 			}
 			if (((cons->cur_x - 8) & 0x1f) == 0) {
-				break;	/* 32偱妱傝愗傟偨傜break */
+				break;
 			}
 		}
-	} else if (s[0] == 0x0a) {	/* 夵峴 */
+	} else if (s[0] == 0x0a) {
 		cons_newline(cons);
-	} else if (s[0] == 0x0d) {	/* 暅婣 */
-		/* 偲傝偁偊偢側偵傕偟側偄 */
-	} else {	/* 晛捠偺暥帤 */
+	} else if (s[0] == 0x0d) {
+	} else {
 		if (cons->sht != 0) {
 			putfonts8_asc_sht(cons->sht, cons->cur_x, cons->cur_y, COL8_FFFFFF, COL8_000000, s, 1);
 		}
 		if (move != 0) {
-			/* move偑0偺偲偒偼僇乕僜儖傪恑傔側偄 */
 			cons->cur_x += 8;
-			if (cons->cur_x == 8 + 240) {
+			if (cons->cur_x == 8 + 512) {
 				cons_newline(cons);
 			}
 		}
@@ -160,22 +160,25 @@ void cons_newline(struct CONSOLE *cons)
 	int x, y;
 	struct SHEET *sheet = cons->sht;
 	struct TASK *task = task_now();
-	if (cons->cur_y < 28 + 112) {
-		cons->cur_y += 16; /* 師偺峴傊 */
+	//if (cons->cur_y < 28 + 112) {
+	if (cons->cur_y < 28 + 432) {
+		cons->cur_y += 16;
 	} else {
-		/* 僗僋儘乕儖 */
 		if (sheet != 0) {
-			for (y = 28; y < 28 + 112; y++) {
-				for (x = 8; x < 8 + 240; x++) {
+			//for (y = 28; y < 28 + 112; y++) {
+			for (y = 28; y < 28 + 432; y++) {
+				for (x = 8; x < 8 + 512; x++) {
 					sheet->buf[x + y * sheet->bxsize] = sheet->buf[x + (y + 16) * sheet->bxsize];
 				}
 			}
-			for (y = 28 + 112; y < 28 + 128; y++) {
-				for (x = 8; x < 8 + 240; x++) {
+			//for (y = 28 + 112; y < 28 + 128; y++) {
+			for (y = 28 + 432; y < 28 + 448; y++) {
+				for (x = 8; x < 8 + 512; x++) {
 					sheet->buf[x + y * sheet->bxsize] = COL8_000000;
 				}
 			}
-			sheet_refresh(sheet, 8, 28, 8 + 240, 28 + 128);
+			//sheet_refresh(sheet, 8, 28, 8 + 240, 28 + 128);
+			sheet_refresh(sheet, 8, 28, 8 + 512, 28 + 448);
 		}
 	}
 	cons->cur_x = 8;
@@ -221,7 +224,7 @@ void cons_runcmd(char *cmdline, struct CONSOLE *cons, int *fat, int memtotal)
 	} else if (cmdline[0] != 0) {
 		if (cmd_app(cons, fat, cmdline) == 0) {
 			/* 僐儅儞僪偱偼側偔丄傾僾儕偱傕側偔丄偝傜偵嬻峴偱傕側偄 */
-			cons_putstr0(cons, "Bad command.\n\n");
+			cons_putstr0(cons, "您输入命令的既不是Wonderful内部指令，也不是外部程序。\n\n");
 		}
 	}
 	return;
@@ -240,12 +243,12 @@ void cmd_cls(struct CONSOLE *cons)
 {
 	int x, y;
 	struct SHEET *sheet = cons->sht;
-	for (y = 28; y < 28 + 128; y++) {
-		for (x = 8; x < 8 + 240; x++) {
+	for (y = 28; y < 28 + 448; y++) {
+		for (x = 8; x < 8 + 512; x++) {
 			sheet->buf[x + y * sheet->bxsize] = COL8_000000;
 		}
 	}
-	sheet_refresh(sheet, 8, 28, 8 + 240, 28 + 128);
+	sheet_refresh(sheet, 8, 28, 8 + 512, 28 + 448);
 	cons->cur_y = 28;
 	return;
 }
@@ -447,8 +450,8 @@ int *hrb_api(int edi, int esi, int ebp, int esp, int ebx, int edx, int ecx, int 
 		sht = sheet_alloc(shtctl);
 		sht->task = task;
 		sht->flags |= 0x10;
-		sheet_setbuf(sht, (char *) ebx + ds_base, esi, edi, eax);
-		make_window8((char *) ebx + ds_base, esi, edi, (char *) ecx + ds_base, 0);
+		sheet_setbuf(sht, (int *) ebx + ds_base, esi, edi, eax);
+		make_window8((int *) ebx + ds_base, esi, edi, (char *) ecx + ds_base, 0);
 		sheet_slide(sht, ((shtctl->xsize - esi) / 2) & ~3, (shtctl->ysize - edi) / 2);
 		sheet_updown(sht, shtctl->top); /* 崱偺儅僂僗偲摨偠崅偝偵側傞傛偆偵巜掕丗 儅僂僗偼偙偺忋偵側傞 */
 		reg[7] = (int) sht;

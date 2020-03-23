@@ -1,7 +1,10 @@
-*.lst
+*.d
 *.obj
-*.map
-*.bim
-*.org
-haribote.img
+*.o
+*.tlog
+*.lastbuildstate
+*.idb
+*.pdb
+*~
+*.swp
 *.hrb

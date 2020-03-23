@@ -2,41 +2,43 @@
 
 #include "bootpack.h"
 
-void make_window8(unsigned char *buf, int xsize, int ysize, char *title, char act)
+void make_window8(unsigned int *buf, int xsize, int ysize, char *title, char act)
 {
-	boxfill8(buf, xsize, COL8_C6C6C6, 0,         0,         xsize - 1, 0        );
+	boxfill8(buf, xsize, COL8_FFFFFF, 0,         0,         xsize - 1, 0        );
+	boxfill8(buf, xsize, COL8_FFFFFF, 0,         0,         xsize - 1, 0        );
 	boxfill8(buf, xsize, COL8_FFFFFF, 1,         1,         xsize - 2, 1        );
-	boxfill8(buf, xsize, COL8_C6C6C6, 0,         0,         0,         ysize - 1);
+	boxfill8(buf, xsize, COL8_FFFFFF, 0,         0,         0,         ysize - 1);
 	boxfill8(buf, xsize, COL8_FFFFFF, 1,         1,         1,         ysize - 2);
-	boxfill8(buf, xsize, COL8_848484, xsize - 2, 1,         xsize - 2, ysize - 2);
-	boxfill8(buf, xsize, COL8_000000, xsize - 1, 0,         xsize - 1, ysize - 1);
-	boxfill8(buf, xsize, COL8_C6C6C6, 2,         2,         xsize - 3, ysize - 3);
-	boxfill8(buf, xsize, COL8_848484, 1,         ysize - 2, xsize - 2, ysize - 2);
-	boxfill8(buf, xsize, COL8_000000, 0,         ysize - 1, xsize - 1, ysize - 1);
+	boxfill8(buf, xsize, COL8_FFFFFF, xsize - 2, 1,         xsize - 2, ysize - 2);
+	boxfill8(buf, xsize, COL8_FFFFFF, xsize - 1, 0,         xsize - 1, ysize - 1);
+	boxfill8(buf, xsize, COL8_FFFFFF, 2,         2,         xsize - 3, ysize - 3);
+	boxfill8(buf, xsize, COL8_FFFFFF, 3,         3,         xsize - 4, 20       );
+	boxfill8(buf, xsize, COL8_FFFFFF, 1,         ysize - 2, xsize - 2, ysize - 2);
+	boxfill8(buf, xsize, COL8_FFFFFF, 0,         ysize - 1, xsize - 1, ysize - 1);
 	make_wtitle8(buf, xsize, title, act);
 	return;
 }
 
-void make_wtitle8(unsigned char *buf, int xsize, char *title, char act)
+void make_wtitle8(unsigned int *buf, int xsize, char *title, char act)
 {
 	static char closebtn[14][16] = {
-		"OOOOOOOOOOOOOOO@",
-		"OQQQQQQQQQQQQQ$@",
-		"OQQQQQQQQQQQQQ$@",
-		"OQQQ@@QQQQ@@QQ$@",
-		"OQQQQ@@QQ@@QQQ$@",
-		"OQQQQQ@@@@QQQQ$@",
-		"OQQQQQQ@@QQQQQ$@",
-		"OQQQQQ@@@@QQQQ$@",
-		"OQQQQ@@QQ@@QQQ$@",
-		"OQQQ@@QQQQ@@QQ$@",
-		"OQQQQQQQQQQQQQ$@",
-		"OQQQQQQQQQQQQQ$@",
-		"O$$$$$$$$$$$$$$@",
-		"@@@@@@@@@@@@@@@@"
+		"QQQQQQQQQQQQQQQQ",
+		"QQQQQQQQQQQQQQQQ",
+		"QQQQQQQQQQQQQQQQ",
+		"QQQQQQQQQQQQQQQQ",
+		"QQQQQ@QQQQ@QQQQQ",
+		"QQQQQQ@QQ@QQQQQQ",
+		"QQQQQQQ@@QQQQQQQ",
+		"QQQQQQQ@@QQQQQQQ",
+		"QQQQQQ@QQ@QQQQQQ",
+		"QQQQQ@QQQQ@QQQQQ",
+		"QQQQQQQQQQQQQQQQ",
+		"QQQQQQQQQQQQQQQQ",
+		"QQQQQQQQQQQQQQQQ",
+		"QQQQQQQQQQQQQQQQ"
 	};
 	int x, y;
-	char c, tc, tbc;
+	int c, tc, tbc;
 	if (act != 0) {
 		tc = COL8_FFFFFF;
 		tbc = COL8_000084;
@@ -54,9 +56,9 @@ void make_wtitle8(unsigned char *buf, int xsize, char *title, char act)
 			} else if (c == '$') {
 				c = COL8_848484;
 			} else if (c == 'Q') {
-				c = COL8_C6C6C6;
-			} else {
 				c = COL8_FFFFFF;
+			} else {
+				c = COL8_C6C6C6;
 			}
 			buf[(5 + y) * xsize + (xsize - 21 + x)] = c;
 		}
@@ -96,7 +98,7 @@ void make_textbox8(struct SHEET *sht, int x0, int y0, int sx, int sy, int c)
 void change_wtitle8(struct SHEET *sht, char act)
 {
 	int x, y, xsize = sht->bxsize;
-	char c, tc_new, tbc_new, tc_old, tbc_old, *buf = sht->buf;
+	int c, tc_new, tbc_new, tc_old, tbc_old, *buf = sht->buf;
 	if (act != 0) {
 		tc_new  = COL8_FFFFFF;
 		tbc_new = COL8_000084;
