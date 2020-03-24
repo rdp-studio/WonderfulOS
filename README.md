@@ -1,6 +1,6 @@
 # Wonderful操作系统
 目前新版已经做好了，周末会上传新版代码，注意，新版本目录结构发生改变，因此本版本将保存为v2分支中。  
-想尝鲜的可以：<button onclick="javascript:location='rdphotapp://1562';">我推荐一个快应用，名字"RDPOS_InsiderPreview"快点击试试吧（ PS:点不动请前往http://rdpstudio.utools.club/HA/下载最新版框架）</button>
+想尝鲜的可以尝试RDPOS(WonderfulOS是其中的一个分版)：![](https://rdpstudio.utools.club/RDP_OS.jpg)
 
 #### 介绍
 ![](https://gitee.com/kkstudio2019/wonderful/raw/master/yulan.png)  
