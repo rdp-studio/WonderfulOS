@@ -1,4 +1,5 @@
 # Wonderful操作系统
+目前新版已经做好了，周末会上传新版代码，注意，新版本目录结构发生改变，因此本版本将保存为v2分支中。
 
 #### 介绍
 ![](https://gitee.com/kkstudio2019/wonderful/raw/master/yulan.png)  
